@@ -16,8 +16,8 @@ public class KeyGeneration {
     BigInteger q = new BigInteger("43");
     BigInteger n = new BigInteger("0");
     BigInteger lambda = new BigInteger("0");
-    BigInteger g = new BigInteger("70");
-    BigInteger subMu = new BigInteger("0");
+    BigInteger g = new BigInteger("0");
+    BigInteger submu = new BigInteger("0");
     BigInteger mu = new BigInteger("0");
     
     OperacionesMatematicas OM = new OperacionesMatematicas();
@@ -43,58 +43,20 @@ public class KeyGeneration {
     
     public BigInteger aleatorioG (){
         //g = (int)(Math.random()*n-2) + 1;
-        //g = 70;
+        g = BigInteger.valueOf(70);
         System.out.println("g: " + g);
+        this.g = g;
         return g;
     }
     
-    public BigInteger subMu(){
-        subMu = g.pow(lambda.intValue());
-        subMu = subMu.mod(n.pow(2));
-        System.out.println("SubMu: " + subMu);
-        
-        return subMu.subtract(BigInteger.ONE);
-    }
-    
     public BigInteger calculoMu (){
-        subMu();
-        mu = subMu.divide(n);
-        mu = mu.mod(n);
-        System.out.println("mu: " + mu);
+        mu = OM.calculoMu(OM.subMu(g, lambda, n), n);
         return mu;
     }
     
-    private long gcdExtended(int a, int b, int[] x, int[] y) {
-        // Base case
-        if (a == 0) {
-            x[0] = 0;
-            y[0] = 1;
-            return b;
-        }
-
-        int[] x1 = new int[1], y1 = new int[1]; // Para almacenar los resultados recursivos
-        long gcd = gcdExtended(b % a, a, x1, y1);
-
-        // Actualizar x y y usando los resultados de la llamada recursiva
-        x[0] = y1[0] - (b / a) * x1[0];
-        y[0] = x1[0];
-
-        return gcd;
-    }
-
-    // Método para encontrar el inverso multiplicativo
-    public long inversoMultiplicativo(int a, int m) {
-        int[] x = new int[1], y = new int[1];
-        long gcd = gcdExtended(a, m, x, y);
-
-        // Si a y m no son coprimos, no existe el inverso
-        if (gcd != 1) {
-            throw new IllegalArgumentException("El inverso no existe porque " + a + " y " + m + " no son coprimos.");
-        } else {
-            // Asegurarse de que el resultado sea positivo
-            int res = (x[0] % m + m) % m;
-            return res;
-        }
+    public void LlavesGeneradas (BigInteger n, BigInteger g, BigInteger lambda, BigInteger mu){
+        System.out.println("Llave publica: (" + g + ", " + n + ")");
+        System.out.println("Llave privada: (" + lambda + ", " + mu + ", " + n + ")");
     }
 
 }
